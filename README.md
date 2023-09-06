@@ -13,7 +13,8 @@ This project uses OpenPose to extract keypoints from videos. It provides functio
 
 - Nvidia Docker runtime: https://github.com/NVIDIA/nvidia-docker#quickstart
 - CUDA 10.0 or higher on your host, check with nvidia-smi
-
+- GPU with at least 1.5 GB available (the nvidia-smi command checks the available GPU memory in Ubuntu).
+- At least 2 GB of free RAM memory.
 
 ## Prerequisites
 
