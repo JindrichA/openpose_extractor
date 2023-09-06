@@ -13,7 +13,7 @@ from tqdm import tqdm
 import glob
 import shutil
 
-input_folder_name = 'testovaci'
+input_folder_name = 'PhyEx_04092023'
 
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -28,8 +28,8 @@ try:
     else:
         # Linux import
         sys.path.append('/mnt/docker-openpose/openpose/build/python')
-        output_folder = '/mnt/docker-openpose/Data/Videa_nastrihana_10042021_crop_out'
-        input_folder = '/mnt/docker-openpose/Data/Videa_nastrihana_10042021_crop'
+        output_folder = '/mnt/data2/docker-openpose-hdd/PhyEx_04092023_out'
+        input_folder = '/mnt/data2/docker-openpose-hdd/PhyEx_04092023'
         from openpose import pyopenpose as op
 except ImportError as e:
     print('Openpose Library, or Cuda is not installed')
