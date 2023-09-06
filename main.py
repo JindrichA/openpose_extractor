@@ -33,8 +33,8 @@ try:
 
         sys.path.append('/mnt/docker-openpose/openpose/build/python')
         sys.path.append('/mnt/docker-openpose/openpose')
-        output_folder = f'/mnt/data2/docker-openpose-hdd/{input_folder_name}_out'
-        input_folder = f'/mnt/data2/docker-openpose-hdd/{input_folder_name}'
+        output_folder = f'/mnt/docker-openpose-hdd/{input_folder_name}_out'
+        input_folder = f'/mnt/docker-openpose-hdd/{input_folder_name}'
         from openpose import pyopenpose as op
 except ImportError as e:
     print('Openpose Library, or Cuda is not installed')
