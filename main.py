@@ -12,9 +12,25 @@ import scipy, scipy.io
 from tqdm import tqdm
 import glob
 import shutil
+import argparse
 
 
-input_folder_name = "test"
+def get_arguments():
+    parser = argparse.ArgumentParser(description="Process some arguments.")
+
+    # Add an argument for "my_parameter"
+    parser.add_argument("--input_folder", type=str, help="Input folder")
+
+    args = parser.parse_args()
+    return args
+
+
+
+args = get_arguments()
+try:
+    input_folder_name = args.input_folder
+except:
+    input_folder_name = "test"
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 try:
@@ -24,12 +40,10 @@ try:
         os.environ['PATH'] = os.environ['PATH'] + ';' + dir_path + '/x64/Release;' + dir_path + '/bin;'
         import pyopenpose as op
 
-        input_folder_name = "testovaci"
         input_folder = f'input/{input_folder_name}'
         output_folder = f'output/{input_folder_name}'
     else:
         # Linux import
-        input_folder_name = '06092023Tst'
 
         sys.path.append('/mnt/docker-openpose/openpose/build/python')
         sys.path.append('/mnt/docker-openpose/openpose')
@@ -41,26 +55,26 @@ except ImportError as e:
     raise e
 
 # OpenPose parameters, model choice etc
-parser = argparse.ArgumentParser()
-args = parser.parse_known_args()
+# parser = argparse.ArgumentParser()
+# args = parser.parse_known_args()
 params = dict()
 params["model_folder"] = "models/"
 params["number_people_max"]= 1
 params["face"] = False
 params["hand"] = False
 params["flir_camera"] = False
-params["inputfolder"] = input_folder_name
 
-for i in range(0, len(args[1])):
-    curr_item = args[1][i]
-    if i != len(args[1])-1: next_item = args[1][i+1]
-    else: next_item = "1"
-    if "--" in curr_item and "--" in next_item:
-        key = curr_item.replace('-','')
-        if key not in params:  params[key] = "1"
-    elif "--" in curr_item and "--" not in next_item:
-        key = curr_item.replace('-','')
-        if key not in params: params[key] = next_item
+
+# for i in range(0, len(args[1])):
+#     curr_item = args[1][i]
+#     if i != len(args[1])-1: next_item = args[1][i+1]
+#     else: next_item = "1"
+#     if "--" in curr_item and "--" in next_item:
+#         key = curr_item.replace('-','')
+#         if key not in params:  params[key] = "1"
+#     elif "--" in curr_item and "--" not in next_item:
+#         key = curr_item.replace('-','')
+#         if key not in params: params[key] = next_item
 
 try:
     opWrapper = op.WrapperPython()
