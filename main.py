@@ -113,12 +113,12 @@ for name_of_file_and_exercise in tqdm(content_input_folder):
                 cv2.imwrite(
                     output_folder + '/' + temp_folder_name + '/' + str(i).zfill(6) + "_" + temp_folder_name + '.jpg',
                     img)
-                k = cv2.waitKey(10)
-                if k == 27:
-                    # text_file_session.close()
-                    break
-                elif k == -1:
-                    continue
+                # # k = cv2.waitKey(10)
+                # if k == 27:
+                #     # text_file_session.close()
+                #     break
+                # elif k == -1:
+                #     continue
             except Exception as e:
                 print(f"An error occurred: {e}")
                 img = 255 * np.ones((int(height), int(width), 3), np.uint8)
