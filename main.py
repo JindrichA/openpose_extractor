@@ -13,7 +13,7 @@ from tqdm import tqdm
 import glob
 import shutil
 
-input_folder_name = '06092023Tst'
+
 
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -23,10 +23,14 @@ try:
         sys.path.append(dir_path + '/python/openpose/Release')
         os.environ['PATH'] = os.environ['PATH'] + ';' + dir_path + '/x64/Release;' + dir_path + '/bin;'
         import pyopenpose as op
+
+        input_folder_name = "testovaci"
         input_folder = f'input/{input_folder_name}'
         output_folder = f'output/{input_folder_name}'
     else:
         # Linux import
+        input_folder_name = '06092023Tst'
+
         sys.path.append('/mnt/docker-openpose/openpose/build/python')
         output_folder = f'/mnt/data2/docker-openpose-hdd/{input_folder_name}_out'
         input_folder = f'/mnt/data2/docker-openpose-hdd/{input_folder_name}'
