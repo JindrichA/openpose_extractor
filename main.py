@@ -14,7 +14,7 @@ import glob
 import shutil
 
 
-
+input_folder_name = "test"
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 try:
@@ -49,6 +49,7 @@ params["number_people_max"]= 1
 params["face"] = False
 params["hand"] = False
 params["flir_camera"] = False
+params["inputfolder"] = input_folder_name
 
 for i in range(0, len(args[1])):
     curr_item = args[1][i]
