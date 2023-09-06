@@ -19,7 +19,9 @@ This project uses OpenPose to extract keypoints from videos. It provides functio
 ## Prerequisites
 
 - Python 3.6
-- Docker image https://hub.docker.com/r/cwaffles/openpose
+- Docker image https://hub.docker.com/r/cwaffles/openpose 
+ or compiled OpenPose https://github.com/CMU-Perceptual-Computing-Lab/openpose
+   
 ## Installation
 
 1. Clone this repository:
