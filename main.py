@@ -120,7 +120,7 @@ for name_of_file_and_exercise in tqdm(content_input_folder):
                 elif k == -1:
                     continue
             except Exception as e:
-                    print(f"An error occurred: {e}")
+                print(f"An error occurred: {e}")
                 img = 255 * np.ones((int(height), int(width), 3), np.uint8)
                 font = cv2.FONT_HERSHEY_SIMPLEX
                 bottomLeftCornerOfText = (10, 500)
