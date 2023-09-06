@@ -8,6 +8,13 @@ This project uses OpenPose to extract keypoints from videos. It provides functio
 - Generate videos with overlaid skeletons to visualize keypoints.
 - Export keypoints data to `.npy` (Numpy array format) and `.mat` (MATLAB format).
 
+
+## Requirements
+
+- Nvidia Docker runtime: https://github.com/NVIDIA/nvidia-docker#quickstart
+- CUDA 10.0 or higher on your host, check with nvidia-smi
+
+
 ## Prerequisites
 
 - Python 3.6
