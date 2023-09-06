@@ -32,6 +32,7 @@ try:
         input_folder_name = '06092023Tst'
 
         sys.path.append('/mnt/docker-openpose/openpose/build/python')
+        sys.path.append('/mnt/docker-openpose/openpose')
         output_folder = f'/mnt/data2/docker-openpose-hdd/{input_folder_name}_out'
         input_folder = f'/mnt/data2/docker-openpose-hdd/{input_folder_name}'
         from openpose import pyopenpose as op
