@@ -114,7 +114,7 @@ for filename in tqdm(list_of_all_videos):
         last_frame = frame.copy()
     # Release the video and close the CSV file
     video.release()
-    cv2.destroyAllWindows()
+    # cv2.destroyAllWindows()
     out.release()
 
 
