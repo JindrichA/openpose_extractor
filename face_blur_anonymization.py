@@ -106,8 +106,8 @@ for filename in tqdm(list_of_all_videos):
                 #frame = np.full((height_original, width_original, 3), 255, dtype=np.uint8)
                 frame = last_frame
         # cv2.imshow('frame', frame)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
+        # if cv2.waitKey(1) & 0xFF == ord('q'):
+        #     break
         out.write(frame)
         # create a copy of frame
         bottom_right_last = bottom_right
