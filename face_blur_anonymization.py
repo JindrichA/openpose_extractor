@@ -5,10 +5,13 @@ from tqdm import tqdm
 from sys import platform
 
 # load all npy files in folder
+if platform == "win32":
 
-video_input_folder = r'C:\Projekty\openpose_extractor\input\PhyEx_04092023'
-npy_input_folder = r'C:\Projekty\openpose_extractor\input\PhyEx_04092023_out'
-
+    video_input_folder = r'C:\Projekty\openpose_extractor\input\PhyEx_04092023'
+    npy_input_folder = r'C:\Projekty\openpose_extractor\input\PhyEx_04092023_out'
+else:
+    video_input_folder = r'/mnt/docker-openpose-hdd/PhyEx_04092023'
+    npy_input_folder = r'/mnt/docker-openpose-hdd/PhyEx_04092023_out'
 
 sucessfully_processed = 0
 
