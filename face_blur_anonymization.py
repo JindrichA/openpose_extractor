@@ -120,6 +120,7 @@ for filename in tqdm(list_of_all_videos):
     out.release()
 
 
+
     # Create the original file path in a cross-platform way
     puvodni_soubor = os.path.join(new_folder_name, filename[:-4] + '_anony.avi')
 
@@ -130,10 +131,12 @@ for filename in tqdm(list_of_all_videos):
     command_ffmpeg = ["ffmpeg", "-i", puvodni_soubor, "-vcodec", "h264", "-acodec", "aac", output_file]
 
     try:
-        os.system(command_ffmpeg)
+        command_str = ' '.join(command_ffmpeg)
+        os.system(command_str)
         os.remove(puvodni_soubor)
         sucessfully_processed =sucessfully_processed +1
     except:
+        print(f"Some problem with {puvodni_soubor}")
         continue
 print(f'Job done - anonymization (blur face) for {sucessfully_processed} files. ')
 
