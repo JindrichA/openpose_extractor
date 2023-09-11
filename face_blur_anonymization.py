@@ -11,7 +11,7 @@ if platform == "win32":
     npy_input_folder = r'C:\Projekty\openpose_extractor\input\PhyEx_04092023_out'
 else:
     video_input_folder = r'/mnt/docker-openpose-hdd/PhyEx_04092023'
-    npy_input_folder =   r'/mnt/docker-openpose-hdd/PhyEx_04092023_out'
+    npy_input_folder =  r'/mnt/docker-openpose-hdd/PhyEx_04092023_out'
 
 sucessfully_processed = 0
 
@@ -40,7 +40,10 @@ for filename in tqdm(list_of_all_videos):
 
 
     # Load a video
-    video = cv2.VideoCapture(video_input_folder + '\\' + filename[:-4]+'.mp4')
+    # video = cv2.VideoCapture(video_input_folder + '\\' + filename[:-4]+'.mp4')
+    video = cv2.VideoCapture(os.path.join(video_input_folder, filename[:-4]+'.mp4'))
+
+
     # get width and height
     width_original = int(video.get(cv2.CAP_PROP_FRAME_WIDTH))
     height_original = int(video.get(cv2.CAP_PROP_FRAME_HEIGHT))
@@ -51,10 +54,8 @@ for filename in tqdm(list_of_all_videos):
 
     try:
         filename_npy = filename[:-4] + '.npy'
-        print(npy_input_folder + '\\' + filename_npy)
-        pose_data = np.load(npy_input_folder + '\\' + filename_npy)
-
-
+        # pose_data = np.load(npy_input_folder + '\\' + filename_npy)
+        pose_data = np.load(os.path.join(npy_input_folder, filename_npy))
     except:
         print(f"Failed to import {filename_npy}. Continuing to next file.")
         continue
