@@ -63,7 +63,9 @@ for filename in tqdm(list_of_all_videos):
 
     # create a new video
     fourcc = cv2.VideoWriter_fourcc(*'XVID')
-    out = cv2.VideoWriter(new_folder_name+'/'+filename[:-4]+'_anony.avi',fourcc, fps, (width_original, height_original))
+
+    output_path = os.path.join(new_folder_name, filename[:-4] + '_anony.avi')
+    out = cv2.VideoWriter(output_path, fourcc, fps, (width_original, height_original))
 
 
     # Video frame count
@@ -118,13 +120,15 @@ for filename in tqdm(list_of_all_videos):
     out.release()
 
 
+    # Create the original file path in a cross-platform way
+    puvodni_soubor = os.path.join(new_folder_name, filename[:-4] + '_anony.avi')
 
-    if platform == "win32":
-        puvodni_soubor = new_folder_name+'/'+filename[:-4]+'_anony.avi'
-        command_ffmpeg = "ffmpeg -i " + puvodni_soubor + " -vcodec h264 -acodec aac " + new_folder_name + '/' + filename + '_comp.mp4'
-    else:
-        puvodni_soubor = new_folder_name+'/'+filename[:-4]+'_anony.avi'
-        command_ffmpeg = "ffmpeg -i " + puvodni_soubor + " -vcodec h264 -acodec aac " + new_folder_name + '/' + filename + '_comp.mp4'
+    # Create the output file path for the compressed video
+    output_file = os.path.join(new_folder_name, filename[:-4] + '_comp.mp4')
+
+    # Construct the ffmpeg command safely
+    command_ffmpeg = ["ffmpeg", "-i", puvodni_soubor, "-vcodec", "h264", "-acodec", "aac", output_file]
+
     try:
         os.system(command_ffmpeg)
         os.remove(puvodni_soubor)
