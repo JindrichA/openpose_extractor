@@ -10,7 +10,7 @@ video_input_folder = r'C:\Projekty\openpose_extractor\input\PhyEx_04092023'
 npy_input_folder = r'C:\Projekty\openpose_extractor\input\PhyEx_04092023_out'
 
 
-
+sucessfully_processed = 0
 
 new_folder_name = video_input_folder + "_anony"
 # Check if folder doesn't exist, then create it
@@ -122,11 +122,11 @@ for filename in tqdm(list_of_all_videos):
     try:
         os.system(command_ffmpeg)
         os.remove(puvodni_soubor)
+        sucessfully_processed =sucessfully_processed +1
     except:
         continue
+print(f'Job done - anonymization (blur face) for {sucessfully_processed} files. ')
 
 
-
-print('Ok')
 
 
