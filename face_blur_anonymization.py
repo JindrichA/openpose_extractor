@@ -10,7 +10,7 @@ if platform == "win32":
     video_input_folder = r'C:\Projekty\openpose_extractor\input\PhyEx_04092023'
     npy_input_folder = r'C:\Projekty\openpose_extractor\input\PhyEx_04092023_out'
 else:
-    video_input_folder = r'/mnt//Data/PhyEx_EXp12102023'
+    video_input_folder = r'/mnt/Data/PhyEx_EXp12102023'
     npy_input_folder =  r'/mnt/docker-openpose-hdd/Data/PhyEx_EXp12102023_out'
 
 sucessfully_processed = 0
