@@ -40,8 +40,8 @@ try:
         os.environ['PATH'] = os.environ['PATH'] + ';' + dir_path + '/x64/Release;' + dir_path + '/bin;'
         import pyopenpose as op
 
-        input_folder = f'input/{input_folder_name}'
-        output_folder = f'output/{input_folder_name}'
+        input_folder = r'C:\Users\adolfjin\mira_videa'
+        output_folder = r'C:\Users\adolfjin\videos_ip_cam_out2'
     else:
         # Linux import
 
@@ -60,8 +60,8 @@ except ImportError as e:
 params = dict()
 params["model_folder"] = "models/"
 params["number_people_max"]= 1
-params["face"] = False
-params["hand"] = False
+params["face"] = True
+params["hand"] = True
 params["flir_camera"] = False
 
 
@@ -190,7 +190,7 @@ for name_of_file_and_exercise in tqdm(content_input_folder):
                 continue
             remove_folder_path = output_folder + '/' + temp_folder_name
             try:
-                shutil.rmtree(remove_folder_path)
+           #     shutil.rmtree(remove_folder_path)
                 print(f"Deleted folder: {remove_folder_path}")
             except Exception as e:
                 print(f"Error deleting {remove_folder_path}: {e}")
