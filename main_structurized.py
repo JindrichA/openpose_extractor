@@ -80,13 +80,20 @@ def generate_video_from_frames(output_folder, temp_folder_name, frame_count, fps
     out.release()
 
     if platform == "win32":
-        cmd_ffmpeg = f"ffmpeg -i {os.path.join(output_folder, f'{temp_folder_name}_skeleton.mp4')} -vcodec h264 -acodec aac {os.path.join(output_folder, f'{temp_folder_name}_skeleton_compre.mp4')}"
+                puvodni_soubor = output_folder + '\\' + temp_folder_name + '_skeleton.mp4'
+                command_ffmpeg = "ffmpeg -i " + output_folder +'/'+temp_folder_name+'_skeleton.mp4' + " -vcodec h264 -acodec aac " + output_folder + '/' + temp_folder_name + '_skeleton_compre.mp4'
     else:
-        cmd_ffmpeg = f"ffmpeg -i {os.path.join(output_folder, f'{temp_folder_name}_skeleton.avi')} -vcodec h264 -acodec aac {os.path.join(output_folder, f'{temp_folder_name}_skeleton_compre.mp4')}"
+                puvodni_soubor = output_folder + '/' + temp_folder_name + '_skeleton.avi'
+                command_ffmpeg = "ffmpeg -i " + output_folder + '/' + temp_folder_name + '_skeleton.avi' + " -vcodec h264 -acodec aac " + output_folder + '/' + temp_folder_name + '_skeleton_compre.mp4'
 
-    os.system(cmd_ffmpeg)
+
+
+    os.system(command_ffmpeg)
     os.remove(video_path)
-    remove_folder_path = output_folder + '/' + temp_folder_name
+    remove_folder_path = output_folder + '\\' + temp_folder_name
+
+
+
     try:
         shutil.rmtree(remove_folder_path)
         print(f"Deleted folder: {remove_folder_path}")
@@ -114,7 +121,7 @@ def process_video_files(input_folder, output_folder, opWrapper, platform):
         width = cam.get(cv2.CAP_PROP_FRAME_WIDTH)
         height = cam.get(cv2.CAP_PROP_FRAME_HEIGHT)
         frame_count = int(cam.get(cv2.CAP_PROP_FRAME_COUNT))
-        duration = frame_count / fps
+        duration = int(frame_count / fps)
 
         print(f'fps = {fps}, Number of frames = {frame_count}, Duration (S) = {duration}')
 
@@ -216,7 +223,7 @@ def main():
         sys.exit(1)
 
     if sys.platform == "win32":
-        input_folder = os.path.join('C:\\', 'Users', 'adolfjin', 'testvideos')
+        input_folder = os.path.join('C:\\', 'Projekty', 'data_k_extrakci')
         output_folder = os.path.join(input_folder, 'output')
     else:
         input_folder = f'/mnt/docker-openpose-hdd/{input_folder_name}'
