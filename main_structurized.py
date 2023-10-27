@@ -19,7 +19,6 @@ def get_arguments():
 
 
 
-
 keypoint_names = [
     "Nose", "Neck", "RShoulder", "RElbow", "RWrist", "LShoulder", "LElbow",
     "LWrist", "MidHip", "RHip", "RKnee", "RAnkle", "LHip", "LKnee", "LAnkle",
@@ -79,13 +78,17 @@ def generate_video_from_frames(output_folder, temp_folder_name, frame_count, fps
     print(f"Finished skeleton video for file: {temp_folder_name}")
     out.release()
 
-    if platform == "win32":
-                puvodni_soubor = output_folder + '\\' + temp_folder_name + '_skeleton.mp4'
-                command_ffmpeg = "ffmpeg -i " + output_folder +'/'+temp_folder_name+'_skeleton.mp4' + " -vcodec h264 -acodec aac " + output_folder + '/' + temp_folder_name + '_skeleton_compre.mp4'
-    else:
-                puvodni_soubor = output_folder + '/' + temp_folder_name + '_skeleton.avi'
-                command_ffmpeg = "ffmpeg -i " + output_folder + '/' + temp_folder_name + '_skeleton.avi' + " -vcodec h264 -acodec aac " + output_folder + '/' + temp_folder_name + '_skeleton_compre.mp4'
+    input_file = os.path.join(output_folder, f'{temp_folder_name}_skeleton.mp4')
+    output_file = os.path.join(output_folder, f'{temp_folder_name}_skeleton_compre.mp4')
 
+    if platform == "win32":
+        input_file = os.path.join(output_folder, f'{temp_folder_name}_skeleton.mp4')
+        output_file = os.path.join(output_folder, f'{temp_folder_name}_skeleton_compre.mp4')
+        command_ffmpeg = f'ffmpeg -i "{input_file}" -vcodec h264 -acodec aac "{output_file}"'
+    else:
+        input_file = os.path.join(output_folder, f'{temp_folder_name}_skeleton.avi')
+        output_file = os.path.join(output_folder, f'{temp_folder_name}_skeleton_compre.mp4')
+        command_ffmpeg = f'ffmpeg -i "{input_file}" -vcodec h264 -acodec aac "{output_file}"'
 
 
     os.system(command_ffmpeg)
@@ -146,11 +149,11 @@ def process_video_files(input_folder, output_folder, opWrapper, platform):
                 ret, imageToProcess = cam.read()
                 datum.cvInputData = imageToProcess
                 opWrapper.emplaceAndPop([datum])
+                img = datum.cvOutputData.copy()
                 if datum.poseKeypoints is not None and datum.poseKeypoints.shape == (1, 25, 3):
 
                     body[i, :, :] = datum.poseKeypoints[0]
                     body[i][body[i] == 0] = np.nan
-                img = datum.cvOutputData.copy()
                 cv2.imwrite(filename, img)
 
             except Exception as e:
@@ -223,7 +226,7 @@ def main():
         sys.exit(1)
 
     if sys.platform == "win32":
-        input_folder = os.path.join('C:\\', 'Projekty', 'data_k_extrakci')
+        input_folder = os.path.join('C:\\', 'Projekty', 'testextractor')
         output_folder = os.path.join(input_folder, 'output')
     else:
         input_folder = f'/mnt/docker-openpose-hdd/{input_folder_name}'
