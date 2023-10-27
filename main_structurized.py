@@ -95,7 +95,7 @@ def generate_video_from_frames(output_folder, temp_folder_name, frame_count, fps
 
     os.system(command_ffmpeg)
     os.remove(video_path)
-    remove_folder_path = output_folder + '\\' + temp_folder_name
+    remove_folder_path = os.path.join(output_folder, temp_folder_name)
 
 
 
@@ -190,8 +190,10 @@ def process_video_files(input_folder, output_folder, opWrapper, platform):
         df = create_dataframe(k, keypoint_names)
         df.to_csv(os.path.join(output_folder, f"{temp_folder_name}.csv"), index=False)
         # Saving as HDF5 (more space efficient and faster for large datasets)
-        #df.to_hdf(os.path.join(output_folder, f"{temp_folder_name}.h5"), key='keypoints', mode='w')
-
+        try:
+            df.to_hdf(os.path.join(output_folder, f"{temp_folder_name}.h5"), key='keypoints', mode='w')
+        except:
+            print(" There is some problem with the H5 file creation ")
         generate_video_from_frames(output_folder, temp_folder_name, frame_count, fps, platform)
 
 def main():
