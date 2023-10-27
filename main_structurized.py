@@ -86,10 +86,12 @@ def generate_video_from_frames(output_folder, temp_folder_name, frame_count, fps
     else:
         input_file = os.path.join(output_folder, f'{temp_folder_name}_skeleton.avi')
         output_file = os.path.join(output_folder, f'{temp_folder_name}_skeleton_compre.mp4')
-        print(input_file)
-        print(output_file)
+
         command_ffmpeg = f'ffmpeg -i "{input_file}" -vcodec h264 -acodec aac "{output_file}"'
 
+    print("Input and output files")
+    print(input_file)
+    print(output_file)
 
     os.system(command_ffmpeg)
     os.remove(video_path)
@@ -188,7 +190,7 @@ def process_video_files(input_folder, output_folder, opWrapper, platform):
         df = create_dataframe(k, keypoint_names)
         df.to_csv(os.path.join(output_folder, f"{temp_folder_name}.csv"), index=False)
         # Saving as HDF5 (more space efficient and faster for large datasets)
-        df.to_hdf(os.path.join(output_folder, f"{temp_folder_name}.h5"), key='keypoints', mode='w')
+        #df.to_hdf(os.path.join(output_folder, f"{temp_folder_name}.h5"), key='keypoints', mode='w')
 
         generate_video_from_frames(output_folder, temp_folder_name, frame_count, fps, platform)
 
