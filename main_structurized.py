@@ -78,8 +78,6 @@ def generate_video_from_frames(output_folder, temp_folder_name, frame_count, fps
     print(f"Finished skeleton video for file: {temp_folder_name}")
     out.release()
 
-    input_file = os.path.join(output_folder, f'{temp_folder_name}_skeleton.mp4')
-    output_file = os.path.join(output_folder, f'{temp_folder_name}_skeleton_compre.mp4')
 
     if platform == "win32":
         input_file = os.path.join(output_folder, f'{temp_folder_name}_skeleton.mp4')
@@ -88,6 +86,8 @@ def generate_video_from_frames(output_folder, temp_folder_name, frame_count, fps
     else:
         input_file = os.path.join(output_folder, f'{temp_folder_name}_skeleton.avi')
         output_file = os.path.join(output_folder, f'{temp_folder_name}_skeleton_compre.mp4')
+        print(input_file)
+        print(output_file)
         command_ffmpeg = f'ffmpeg -i "{input_file}" -vcodec h264 -acodec aac "{output_file}"'
 
 
