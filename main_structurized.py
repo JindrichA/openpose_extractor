@@ -10,6 +10,7 @@ import shutil
 import importlib
 import pandas as pd
 import config
+import subprocess
 
 
 ## Defining variables
@@ -96,15 +97,23 @@ def generate_video_from_frames(output_folder, temp_folder_name, frame_count, fps
     print(input_file)
     print(output_file)
 
-    os.system(command_ffmpeg)
+    result = subprocess.run(command_ffmpeg, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+    if result.returncode == 0:
+        print("Video has been converter sucessfully.")
+        print("Output:", result.stdout)
+    else:
+        print("Command failed with status code:", result.returncode)
+        print("Error Output:", result.stderr)
+
     os.remove(video_path)
+
     remove_folder_path = os.path.join(output_folder, temp_folder_name)
 
 
 
     try:
         shutil.rmtree(remove_folder_path)
-        print(f"Deleted folder: {remove_folder_path}")
+        print(f"Deleted folder: {remove_folder_path} with images.")
     except Exception as e:
         print(f"Error deleting {remove_folder_path}: {e}")
 
@@ -130,7 +139,7 @@ def process_video_files(input_folder, output_folder, opWrapper, platform):
         temp_folder_name = name_of_file_and_exercise[:-4]
 
 
-        final_file_name = os.path.join(input_folder,"output", temp_folder_name+"_skeleton_compre.mp4")
+        final_file_name = os.path.join(output_folder, temp_folder_name+"_skeleton_compre.mp4")
 
         if os.path.exists(final_file_name):
             print(f"The file {final_file_name} is already processed, we will skip to another file.")
@@ -160,7 +169,7 @@ def process_video_files(input_folder, output_folder, opWrapper, platform):
 
         os.makedirs(os.path.join(output_folder, temp_folder_name), exist_ok=True)
 
-        for i in range(frame_count - 1):
+        for i in tqdm(range(frame_count - 1)):
             try:
                 img = datum.cvOutputData.copy()
                 filename = os.path.join(output_folder, temp_folder_name, f"{str(i).zfill(6)}_{temp_folder_name}.jpg")
