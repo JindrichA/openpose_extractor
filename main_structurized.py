@@ -9,6 +9,14 @@ import glob
 import shutil
 import importlib
 import pandas as pd
+import config
+
+
+## Defining variables
+
+KEYPOINTS_NAMES = config.KEYPOINTS_NAMES
+
+
 
 def get_arguments():
     parser = argparse.ArgumentParser(description="Process input arguments.")
@@ -19,12 +27,6 @@ def get_arguments():
 
 
 
-keypoint_names = [
-    "Nose", "Neck", "RShoulder", "RElbow", "RWrist", "LShoulder", "LElbow",
-    "LWrist", "MidHip", "RHip", "RKnee", "RAnkle", "LHip", "LKnee", "LAnkle",
-    "REye", "LEye", "REar", "LEar", "LBigToe", "LSmallToe", "LHeel", "RBigToe",
-    "RSmallToe", "RHeel"
-]
 def create_dataframe(k, keypoint_names):
     data = []
     for i, name in enumerate(keypoint_names):
@@ -38,6 +40,7 @@ def create_dataframe(k, keypoint_names):
 
 
 def setup_openpose(platform, dir_path):
+
     global op  # Declare the module object at the global scope
 
     if platform == "win32":
@@ -113,6 +116,11 @@ def get_video_files(input_folder):
     video_files = [f for f in all_files if any(f.endswith(ext) for ext in video_extensions)]
     return sorted(video_files)
 
+
+
+
+
+
 def process_video_files(input_folder, output_folder, opWrapper, platform):
     content_input_folder = get_video_files(input_folder)
     print(f"Number of files to be processed: {len(content_input_folder)}")
@@ -120,6 +128,19 @@ def process_video_files(input_folder, output_folder, opWrapper, platform):
     for name_of_file_and_exercise in tqdm(content_input_folder):
         path_to_video = os.path.join(input_folder, name_of_file_and_exercise)
         temp_folder_name = name_of_file_and_exercise[:-4]
+
+
+        final_file_name = os.path.join(input_folder,"output", temp_folder_name+"_skeleton_compre.mp4")
+
+        if os.path.exists(final_file_name):
+            print(f"The file {final_file_name} is already processed, we will skip to another file.")
+            continue
+        else:
+            print(f"The file {final_file_name} is not processed yet, processing will begin now")
+
+
+
+
         cam = cv2.VideoCapture(path_to_video)
 
         fps = cam.get(cv2.CAP_PROP_FPS)
@@ -135,7 +156,7 @@ def process_video_files(input_folder, output_folder, opWrapper, platform):
         datum.cvInputData = imageToProcess
         opWrapper.emplaceAndPop([datum])
 
-        body = np.full((frame_count, 25, 3), np.nan)
+        full_25body_keypoints_data = np.full((frame_count, 25, 3), np.nan)
 
         os.makedirs(os.path.join(output_folder, temp_folder_name), exist_ok=True)
 
@@ -154,8 +175,8 @@ def process_video_files(input_folder, output_folder, opWrapper, platform):
                 img = datum.cvOutputData.copy()
                 if datum.poseKeypoints is not None and datum.poseKeypoints.shape == (1, 25, 3):
 
-                    body[i, :, :] = datum.poseKeypoints[0]
-                    body[i][body[i] == 0] = np.nan
+                    full_25body_keypoints_data[i, :, :] = datum.poseKeypoints[0]
+                    full_25body_keypoints_data[i][full_25body_keypoints_data[i] == 0] = np.nan
                 cv2.imwrite(filename, img)
 
             except Exception as e:
@@ -180,18 +201,18 @@ def process_video_files(input_folder, output_folder, opWrapper, platform):
                 cv2.imwrite(filename, img)
                 print(f"Frame n.o.: {i} can't be processed.")
 
-        k = np.array(body)
+        numpy_xyc_matrix = np.array(full_25body_keypoints_data)
         print(f"Finished Openpose for file: {temp_folder_name}")
 
         scipy.io.savemat(os.path.join(output_folder, f"{temp_folder_name}.mat"),
-                         mdict={'xbody': k[:, :, 0], 'ybody': k[:, :, 1], 'cbody': k[:, :, 2]})
-        np.save(os.path.join(output_folder, f"{temp_folder_name}.npy"), k)
+                         mdict={'xbody': numpy_xyc_matrix[:, :, 0], 'ybody': numpy_xyc_matrix[:, :, 1], 'cbody': numpy_xyc_matrix[:, :, 2]})
+        np.save(os.path.join(output_folder, f"{temp_folder_name}.npy"), numpy_xyc_matrix)
 
-        df = create_dataframe(k, keypoint_names)
-        df.to_csv(os.path.join(output_folder, f"{temp_folder_name}.csv"), index=False)
+        df_xyc_25_keypoints = create_dataframe(numpy_xyc_matrix, KEYPOINTS_NAMES)
+        df_xyc_25_keypoints.to_csv(os.path.join(output_folder, f"{temp_folder_name}.csv"), index=False)
         # Saving as HDF5 (more space efficient and faster for large datasets)
         try:
-            df.to_hdf(os.path.join(output_folder, f"{temp_folder_name}.h5"), key='keypoints', mode='w')
+            df_xyc_25_keypoints.to_hdf(os.path.join(output_folder, f"{temp_folder_name}.h5"), key='keypoints', mode='w')
         except:
             print(" There is some problem with the H5 file creation ")
         generate_video_from_frames(output_folder, temp_folder_name, frame_count, fps, platform)

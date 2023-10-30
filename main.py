@@ -40,8 +40,8 @@ try:
         os.environ['PATH'] = os.environ['PATH'] + ';' + dir_path + '/x64/Release;' + dir_path + '/bin;'
         import pyopenpose as op
 
-        input_folder = r'C:\Users\adolfjin\mira_videa'
-        output_folder = r'C:\Users\adolfjin\videos_ip_cam_out2'
+        input_folder = r'C:\Projekty\data_k_extrakci'
+        output_folder = f'{input_folder}/out'
     else:
         # Linux import
 
