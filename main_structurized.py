@@ -122,7 +122,7 @@ def generate_video_from_frames(output_folder, temp_folder_name, frame_count, fps
 def get_video_files(input_folder):
     video_extensions = ['.mp4', '.avi', '.mkv', '.mov', '.flv']  # You can extend this list as needed
     all_files = os.listdir(input_folder)
-    video_files = [f for f in all_files if any(f.endswith(ext) for ext in video_extensions)]
+    video_files = [f for f in all_files if any(f.lower().endswith(ext) for ext in video_extensions) and not f.lower().startswith('asdasd')]
     return sorted(video_files)
 
 
