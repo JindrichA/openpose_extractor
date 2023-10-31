@@ -11,7 +11,8 @@ import importlib
 import pandas as pd
 import config
 import subprocess
-
+import logging
+import traceback
 
 ## Defining variables
 
@@ -131,6 +132,11 @@ def get_video_files(input_folder):
 
 
 def process_video_files(input_folder, output_folder, opWrapper, platform):
+
+
+
+    logging.basicConfig(filename=output_folder+'/error_log.txt', level=logging.ERROR)
+
     content_input_folder = get_video_files(input_folder)
     print(f"Number of files to be processed: {len(content_input_folder)}")
 
@@ -174,7 +180,10 @@ def process_video_files(input_folder, output_folder, opWrapper, platform):
                     img = datum.cvOutputData.copy()
                     filename = os.path.join(output_folder, temp_folder_name, f"{str(i).zfill(6)}_{temp_folder_name}.jpg")
                 except Exception as e:
-                        print(f"An error occurred: {e}")
+                    # Step 4: Log the exception details and print the error message
+                    logging.error("An error occurred: %s", str(e))
+                    logging.error("Traceback: %s", traceback.format_exc())
+                    print("An error occurred:", str(e))
 
 
                 try:
@@ -190,6 +199,8 @@ def process_video_files(input_folder, output_folder, opWrapper, platform):
 
                 except Exception as e:
                     print(f"An error occurred: {e}")
+                    logging.error("An error occurred: %s", str(e))
+                    logging.error("Traceback: %s", traceback.format_exc())
                     #img = 255 * np.ones((int(height), int(width), 3), np.uint8)
                     #img = imageToProcess.copy()
                     # Scale the font size based on the image's dimensions
@@ -222,11 +233,19 @@ def process_video_files(input_folder, output_folder, opWrapper, platform):
             # Saving as HDF5 (more space efficient and faster for large datasets)
             try:
                 df_xyc_25_keypoints.to_hdf(os.path.join(output_folder, f"{temp_folder_name}.h5"), key='keypoints', mode='w')
-            except:
+            except Exception as e:
+                # Step 4: Log the exception details and print the error message
+                logging.error("An error occurred: %s", str(e))
+                logging.error("Traceback: %s", traceback.format_exc())
+                print("An error occurred:", str(e))
                 print(" There is some problem with the H5 file creation ")
             generate_video_from_frames(output_folder, temp_folder_name, frame_count, fps, platform)
-        except:
-            print("Not working for: "+ name_of_file_and_exercise)
+
+
+        except Exception as e:
+            logging.error("An error occurred: %s", str(e))
+            logging.error("Traceback: %s", traceback.format_exc())
+            print("An error occurred:", str(e))
             continue
 
 
@@ -260,6 +279,8 @@ def main():
         opWrapper.start()
         print("OpenPose Library loaded successfully")
     except Exception as e:
+        logging.error("An error occurred: %s", str(e))
+        logging.error("Traceback: %s", traceback.format_exc())
         print(f'Error initializing OpenPose: {e}')
         sys.exit(1)
 
