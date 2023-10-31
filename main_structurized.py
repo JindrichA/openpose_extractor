@@ -198,28 +198,33 @@ def process_video_files(input_folder, output_folder, opWrapper, platform):
                     cv2.imwrite(filename, img)
 
                 except Exception as e:
-                    print(f"An error occurred: {e}")
-                    logging.error("An error occurred: %s", str(e))
-                    logging.error("Traceback: %s", traceback.format_exc())
+                    # print(f"An error occurred: {e}")
+                    # logging.error("An error occurred: %s", str(e))
+                    # logging.error("Traceback: %s", traceback.format_exc())
                     #img = 255 * np.ones((int(height), int(width), 3), np.uint8)
                     #img = imageToProcess.copy()
                     # Scale the font size based on the image's dimensions
                     # Here, we scale it based on the width; you can adjust as needed
-                    fontScale = width / 1000.0  # This is an arbitrary scaling factor; you might want to adjust it
+                    try:
+                        fontScale = width / 1000.0  # This is an arbitrary scaling factor; you might want to adjust it
 
-                    # Get the size of the text box
-                    text = 'No detected person in this frame'
-                    (textWidth, textHeight), _ = cv2.getTextSize(text, cv2.FONT_HERSHEY_SIMPLEX, fontScale, 4)
+                        # Get the size of the text box
+                        text = 'No detected person in this frame'
+                        (textWidth, textHeight), _ = cv2.getTextSize(text, cv2.FONT_HERSHEY_SIMPLEX, fontScale, 4)
 
-                    # Compute starting position for the text so it's centered
-                    x = int((width - textWidth) // 2)
-                    y = int((height + textHeight) // 2)
+                        # Compute starting position for the text so it's centered
+                        x = int((width - textWidth) // 2)
+                        y = int((height + textHeight) // 2)
 
-                    # Place the text on the image
-                    # Place the text on the image
-                    cv2.putText(img, text, (x, y), cv2.FONT_HERSHEY_SIMPLEX, fontScale, (0, 0, 255), 2)
-                    cv2.imwrite(filename, img)
-                    print(f"Frame n.o.: {i} can't be processed.")
+                        # Place the text on the image
+                        # Place the text on the image
+                        cv2.putText(img, text, (x, y), cv2.FONT_HERSHEY_SIMPLEX, fontScale, (0, 0, 255), 2)
+                        cv2.imwrite(filename, img)
+                        #print(f"Frame n.o.: {i} can't be processed.")
+                    except Exception as e:
+                        print(f"An error occurred: {e}")
+                        logging.error("An error occurred: %s", str(e))
+                        logging.error("Traceback: %s", traceback.format_exc())
 
             numpy_xyc_matrix = np.array(full_25body_keypoints_data)
             print(f"Finished Openpose for file: {temp_folder_name}")
@@ -230,15 +235,15 @@ def process_video_files(input_folder, output_folder, opWrapper, platform):
 
             df_xyc_25_keypoints = create_dataframe(numpy_xyc_matrix, KEYPOINTS_NAMES)
             df_xyc_25_keypoints.to_csv(os.path.join(output_folder, f"{temp_folder_name}.csv"), index=False)
-            # Saving as HDF5 (more space efficient and faster for large datasets)
-            try:
-                df_xyc_25_keypoints.to_hdf(os.path.join(output_folder, f"{temp_folder_name}.h5"), key='keypoints', mode='w')
-            except Exception as e:
-                # Step 4: Log the exception details and print the error message
-                logging.error("An error occurred: %s", str(e))
-                logging.error("Traceback: %s", traceback.format_exc())
-                print("An error occurred:", str(e))
-                print(" There is some problem with the H5 file creation ")
+            # # Saving as HDF5 (more space efficient and faster for large datasets)
+            # try:
+            #     df_xyc_25_keypoints.to_hdf(os.path.join(output_folder, f"{temp_folder_name}.h5"), key='keypoints', mode='w')
+            # except Exception as e:
+            #     # Step 4: Log the exception details and print the error message
+            #     logging.error("An error occurred: %s", str(e))
+            #     logging.error("Traceback: %s", traceback.format_exc())
+            #     print("An error occurred:", str(e))
+            #     print(" There is some problem with the H5 file creation ")
             generate_video_from_frames(output_folder, temp_folder_name, frame_count, fps, platform)
 
 
